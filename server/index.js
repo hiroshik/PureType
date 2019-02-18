@@ -165,9 +165,9 @@ const sendWord = function sendWord(client, userName) {
 };
 
 const similarity = function similarity(strA,strB){
-    for(var result = 0, i = strA.length; i--;){
-        if(typeof strB[i] == 'undefined' || strA[i] == strB[i]);
-        else if(strA[i].toLowerCase() == strB[i].toLowerCase())
+    for (var result = 0, i = strA.length; i--;){
+        if (typeof strB[i] === 'undefined' || strA[i] === strB[i]) {}
+        else if (strA[i].toLowerCase() === strB[i].toLowerCase())
             result++;
         else
             result += 4;
@@ -185,7 +185,7 @@ io.on('connection', client => {
             newUser: userName
         });
 
-        userInfo[userName] = { score: 0, lastWord = null };
+        userInfo[userName] = { score: 0, lastWord: null };
         
     });
 
