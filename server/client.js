@@ -1,6 +1,6 @@
 const io = require('socket.io-client');
 
-const socket = io('http://localhost:3000?name=' + process.argv[2]);
+const socket = io('http://localhost:4000?name=' + process.argv[2]);
 
 socket.on('connect', () => {
     console.log(socket.connected);

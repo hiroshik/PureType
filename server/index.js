@@ -187,7 +187,7 @@ io.on('connection', client => {
 
         userInfo[userName] = { score: 0, lastWord: null };
 
-        sendWord(client);        
+        sendWord(client, userName);        
     });
 
     client.on('disconnect', (reason) => {
@@ -203,13 +203,14 @@ io.on('connection', client => {
         const similarityScore = similarity(data.word, userInfo[userName].lastWord);
         console.debug(`${userName} sent ${data.word} for ${userInfo[userName].lastWord} with similarity score of ${similarityScore}`);
         userInfo[userName].score += (data.time / 100) * similarityScore;
-        sendWord(client);
+        sendWord(client, userName);
 
     });
 });
 
 setInterval(() => {
     io.emit('leaderboard', userInfo);
+    console.log("Sending leaderboard");
 }, 10000);
 
-server.listen(3000);
+server.listen(4000);

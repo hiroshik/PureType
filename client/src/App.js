@@ -1,32 +1,30 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import './App.scss';
-import socketIOClient from "socket.io-client";
+import GameRoom from "./container/GameRoom";
+import Home from "./container/Home";
+import LeaderBoard from "./container/LeaderBoard";
+import Navigation from "./components/Navigation";
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      response: false,
-      endpoint: "http://127.0.0.1:3000"
-    };
-  }
 
   componentDidMount() {
-    const { endpoint } = this.state;
-    const socket = socketIOClient(endpoint);
-    socket.on("game-room", data => this.setState({ response: data }));
+
   }
 
   render() {
-    const { response } = this.state;
     return (
-      <div style={{ textAlign: "center" }}>
-        {response
-          ? <p>
-            {response}
-            </p>
-          : <p>Loading...</p>}
-      </div>
+        <BrowserRouter>
+          <React.Fragment>
+            <Navigation/>
+            <Switch>
+              <Route exact path='/' component={Home}/>
+              <Route exact path='/game-room' component={GameRoom}/>
+              <Route exact path='/leaderBoard' component={LeaderBoard}/>
+              <Redirect to="/" />
+            </Switch>
+          </React.Fragment>
+        </BrowserRouter>
     );
   }
 }
