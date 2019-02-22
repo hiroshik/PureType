@@ -180,17 +180,18 @@ io.on('connection', client => {
 
     
     client.join('/game-room', () => {
-        console.log('New user', userName);
+        console.info('New user', userName);
         io.emit('game-room', {
             newUser: userName
         });
 
         userInfo[userName] = { score: 0, lastWord: null };
-        
+
+        sendWord(client);        
     });
 
     client.on('disconnect', (reason) => {
-        console.log('User ' +  userName + ' left because of ' + reason);
+        console.info('User ' +  userName + ' left because of ' + reason);
         io.emit('game-room', {
             userLeft: userName
         });
@@ -198,10 +199,10 @@ io.on('connection', client => {
         delete userInfo[userName];
     });
 
-    sendWord(client);
-
     client.on('score', (data) => {
-        userInfo[userName].score += (data.time / 100) * similarity(data.word, userInfo[userName].lastWord); 
+        const similarityScore = similarity(data.word, userInfo[userName].lastWord);
+        console.debug(`${userName} sent ${data.word} for ${userInfo[userName].lastWord} with similarity score of ${similarityScore}`);
+        userInfo[userName].score += (data.time / 100) * similarityScore;
         sendWord(client);
 
     });
