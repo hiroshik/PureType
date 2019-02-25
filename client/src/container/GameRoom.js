@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
+import CountDown from "../components/CountDown";
 
 class GameRoom extends Component {
-  constructor() {
-    super();
-    this.state = {
-      response: false,
-    };
-  }
+  state = {
+    response: null,
+    countDown: 3,
+    wordList: []
+  };
 
   componentDidMount() {
 
@@ -15,12 +15,8 @@ class GameRoom extends Component {
   render() {
     const { response } = this.state;
     return (
-      <div style={{ textAlign: "center" }}>
-        {response
-          ? <p>
-            loaded
-          </p>
-          : <p>Loading...</p>}
+      <div>
+        <CountDown countDown={3}/>
       </div>
     );
   }

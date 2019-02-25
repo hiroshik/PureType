@@ -14,6 +14,7 @@ class App extends Component {
 
   render() {
     return (
+      <div className={"app"}>
         <BrowserRouter>
           <React.Fragment>
             <Navigation/>
@@ -25,6 +26,7 @@ class App extends Component {
             </Switch>
           </React.Fragment>
         </BrowserRouter>
+      </div>
     );
   }
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import socket from "../socket";
+import Loading from "../components/Loading";
 
 class LeaderBoard extends Component {
   socket = socket();
@@ -20,9 +21,15 @@ class LeaderBoard extends Component {
 
   render() {
     const {leaderBoard} = this.state;
-    console.log(leaderBoard);
+
+    if (Object.keys(leaderBoard).length === 0) {
+      return <React.Fragment>
+        <Loading text={"Loading LeaderBoard"} />
+      </React.Fragment>
+    }
+
     return (
-      <div>
+      <React.Fragment>
         Leader Board
         <table>
           <thead>
@@ -45,7 +52,7 @@ class LeaderBoard extends Component {
           }
           </tbody>
         </table>
-      </div>
+      </React.Fragment>
     );
   }
 }
