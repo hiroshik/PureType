@@ -2,21 +2,21 @@
 
 .navigation {
   position: fixed;
-  width: 80px;
+  width: 120px;
   height: 100%;
   top: 0;
   left: 0;
   z-index: 999;
   background: $blue;
   color: $white;
+  padding: 10px;
+
   .key {
     width: 40px;
     height: 45px;
-    margin: 2px;
     border-width: 3px 7px 10px;
     border-style: solid;
     border-radius: 4px;
-    float: left;
     background: #d3cfcc;
     border-color: #ece8e4 #dedad6 #c9c4c4;
     .keycap {
@@ -36,9 +36,9 @@
 
   ul {
     list-style: none;
-
+    padding: 0;
     li {
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
   }
 }
