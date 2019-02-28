@@ -18,12 +18,14 @@ class App extends Component {
         <BrowserRouter>
           <React.Fragment>
             <Navigation/>
+            <main>
             <Switch>
               <Route exact path='/' component={Home}/>
               <Route exact path='/game-room' component={GameRoom}/>
               <Route exact path='/leaderBoard' component={LeaderBoard}/>
               <Redirect to="/" />
             </Switch>
+            </main>
           </React.Fragment>
         </BrowserRouter>
       </div>

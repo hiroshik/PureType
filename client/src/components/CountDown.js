@@ -5,7 +5,7 @@ const CountDown = (props) => {
     return null;
   }
 
-  return <div className={"fullscreen countDown"}>
+  return <div className={"countDown"}>
     <span>{props.countDown}</span>
   </div>
 };
