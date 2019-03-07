@@ -30,7 +30,7 @@ class GameRoom extends Component {
     return <div className={"gameRoom"}>
       <input className={"personalInfo"} type="text" name="name" value={this.state.name} placeholder={"Name"} onChange={this.updateEmail}/>
       <input className={"personalInfo"} type="email" name="email" value={this.state.email} placeholder={"Email"} onChange={this.updateEmail}/>
-      <button onClick={()=> {this.setState({profileIsSet: true})}}>Start</button>
+      <button onClick={()=> {this.setState({profileIsSet: this.state.name !== '' && this.state.email !== ''})}}>Start</button>
     </div>
   };
 
