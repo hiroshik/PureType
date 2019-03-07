@@ -1,0 +1,33 @@
+@import "./variables";
+
+.gameRoom {
+
+  input {
+    font-size: 2rem;
+    font-family: 'Rubik', sans-serif;
+    color: $white;
+    background: transparent;
+    padding: 12px;
+    min-width: 340px;
+    outline: none;
+
+    &.personalInfo {
+      display: block;
+      border: 2px solid $white;
+      border-radius: 6px;
+      margin-bottom: 40px;
+    }
+  }
+
+  button {
+    display: block;
+    font-size: 2rem;
+    background: $deepGray;
+    border: 2px solid $rallyGreen;
+    border-radius: 6px;
+    color: $rallyGreen;
+    padding: 8px 18px;
+    margin: 40px auto;
+    cursor: pointer;
+  }
+}

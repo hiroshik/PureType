@@ -1,0 +1,32 @@
+@import "./variables";
+
+.app {
+  font-weight: 400;
+  font-size: 16px;
+  font-family: 'Rubik', sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  main {
+    width: calc(100% - 120px);
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    box-sizing: border-box;
+    padding: 20px;
+    background: $mediumGray;
+    color: $white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+

@@ -4,19 +4,52 @@ import CountDown from "../components/CountDown";
 class GameRoom extends Component {
   state = {
     response: null,
-    countDown: 3,
-    wordList: []
+    wordList: [],
+    name: "",
+    email: "",
+    profileIsSet: false,
+    gameStart: false
   };
+
+  updateEmail = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
+
+  timerEnd = () => {
+    console.log('Ends');
+    this.setState({gameStart: true})
+  }
 
   componentDidMount() {
 
   }
 
+  renderEmailInput() {
+    return <div className={"gameRoom"}>
+      <input className={"personalInfo"} type="text" name="name" value={this.state.name} placeholder={"Name"} onChange={this.updateEmail}/>
+      <input className={"personalInfo"} type="email" name="email" value={this.state.email} placeholder={"Email"} onChange={this.updateEmail}/>
+      <button onClick={()=> {this.setState({profileIsSet: true})}}>Start</button>
+    </div>
+  };
+
   render() {
-    const { response } = this.state;
+    const { profileIsSet, gameStart } = this.state;
+
+    if (!profileIsSet) {
+      return this.renderEmailInput()
+    }
+
+    if (profileIsSet && !gameStart) {
+      return <div className={"gameRoom"}>
+        <CountDown startTimer={3} timerEndCallback={this.timerEnd}/>
+      </div>
+    }
+
     return (
-      <div>
-        <CountDown countDown={3}/>
+      <div className={"gameRoom"}>
+        Game started
       </div>
     );
   }
