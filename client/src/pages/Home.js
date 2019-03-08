@@ -1,34 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Home extends Component {
-  constructor() {
-    super();
-    this.state = {
-      email: ''
-    };
-  }
+const Home = () => {
 
-  updateEmail = (e) => {
-    this.setState({
-      email: e.target.value
-    })
-  };
+  return <div className={"home"}>
+    <h1>Welcome to PureType</h1>
+    <p>You will be given 10 words. Use your best effort to type each given word fast and accurate.</p>
+    <p>Once you finish all 10 words. Your total time will be recorded and used to compete with others.</p>
+  </div>
 
-  connect = () => {
-
-  };
-
-  render() {
-    return (
-      <div>
-        home
-        <input className={"input"} placeholder={"Your Name"} value={this.state.email} onChange={this.updateEmail}/>
-        <button onClick={this.connect}>
-          Start
-        </button>
-      </div>
-    );
-  }
-}
+};
 
 export default Home;

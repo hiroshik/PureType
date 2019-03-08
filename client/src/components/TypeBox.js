@@ -7,13 +7,13 @@ class TypeBox extends Component {
 
   startTimer = () => {
     this.setState({
-      startTimer: (new Date).getTime()
+      startTimer: (new Date()).getTime()
     })
   };
 
   validateTyping = (e) => {
     if (this.props.currentWord === e.target.value) {
-      const endTimer = (new Date).getTime();
+      const endTimer = (new Date()).getTime();
       this.props.recordTime(this.props.currentWord, endTimer - this.state.startTimer);
     }
   };

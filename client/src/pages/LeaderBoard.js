@@ -24,7 +24,7 @@ class LeaderBoard extends Component {
 
     if (Object.keys(leaderBoard).length === 0) {
       return <React.Fragment>
-        <Loading text={"Loading LeaderBoard"} />
+        <Loading text={"Loading LeaderBoard..."} />
       </React.Fragment>
     }
 

@@ -3,7 +3,7 @@ import CountDown from "../components/CountDown";
 import TypeBox from "../components/TypeBox";
 import {Link} from "react-router-dom";
 
-const words = [{'word': 'aliceblue', 'color': 'F0F8FF'},
+const words = [{'word': 'a', 'color': 'F0F8FF'},
   {'word': 'antiquewhite', 'color': 'FAEBD7'},
   {'word': 'aqua', 'color': '00FFFF'},
   {'word': 'aquamarine', 'color': '7FFFD4'},
