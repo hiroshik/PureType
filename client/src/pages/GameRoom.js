@@ -3,7 +3,7 @@ import CountDown from "../components/CountDown";
 import TypeBox from "../components/TypeBox";
 import {Link} from "react-router-dom";
 
-const words = [{'word': 'a', 'color': 'F0F8FF'},
+const words = [{'word': 'aliceblue', 'color': 'F0F8FF'},
   {'word': 'antiquewhite', 'color': 'FAEBD7'},
   {'word': 'aqua', 'color': '00FFFF'},
   {'word': 'aquamarine', 'color': '7FFFD4'},
@@ -74,7 +74,7 @@ class GameRoom extends Component {
     if (completed) {
       return <div  className={"gameRoom"}>
         <h1>Congratulations!</h1>
-        <p>You have successfully complete the challenge. Your total time is {this.state.totalTime} milliseconds!</p>
+        <p>You have successfully completed the challenge. Your total time is {this.state.totalTime} milliseconds!</p>
         <p>You may check the <Link to={'/leader-board'}>Leader Board</Link> to compare with others</p>
       </div>
     }
