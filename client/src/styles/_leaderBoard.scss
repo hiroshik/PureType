@@ -1,0 +1,14 @@
+.leaderBoard {
+  .ranking {
+    text-align: left;
+    font-size: 20px;
+
+    td, th {
+      padding: 4px 10px;
+
+      &.order {
+        text-align: center;
+      }
+    }
+  }
+}

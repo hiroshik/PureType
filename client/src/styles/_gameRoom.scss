@@ -1,7 +1,7 @@
 @import "./variables";
+@import "./mixins";
 
 .gameRoom {
-
   input {
     font-size: 2rem;
     font-family: 'Rubik', sans-serif;
@@ -10,6 +10,11 @@
     padding: 12px;
     min-width: 340px;
     outline: none;
+
+    @include mobile {
+      font-size: 1rem;
+      min-widtH: 260px;
+    }
 
     &.personalInfo {
       display: block;
@@ -32,6 +37,10 @@
     text-align: center;
     font-size: 80px;
     margin-bottom: 40px;
+
+    @include mobile {
+      font-size: 40px;
+    }
   }
 
   a {
@@ -49,5 +58,8 @@
     padding: 8px 18px;
     margin: 40px auto;
     cursor: pointer;
+    @include mobile {
+      font-size: 1rem;
+    }
   }
 }

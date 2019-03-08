@@ -12,7 +12,7 @@ class TypeBox extends Component {
   };
 
   validateTyping = (e) => {
-    if (this.props.currentWord === e.target.value) {
+    if (this.props.currentWord.toLowerCase() === e.target.value.toLowerCase()) {
       const endTimer = (new Date()).getTime();
       this.props.recordTime(this.props.currentWord, endTimer - this.state.startTimer);
     }
@@ -42,6 +42,10 @@ class TypeBox extends Component {
         ref={(input) => { this.nameInput = input; }}
         type={"text"}
         onChange={this.validateTyping}
+        autoComplete={'off'}
+        autoCorrect={'off'}
+        autoCapitalize={'off'}
+        autoFocus={true}
       />
     </div>
   }
