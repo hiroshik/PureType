@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import CountDown from "../components/CountDown";
 import TypeBox from "../components/TypeBox";
-import {Link} from "react-router-dom";
 import socket from "../socket";
+import Completion from "../components/Completion";
 
 const words = [{'word': 'aliceblue', 'color': 'F0F8FF'},
   {'word': 'antiquewhite', 'color': 'FAEBD7'},
@@ -51,14 +51,14 @@ class GameRoom extends Component {
     }
   };
 
-  renderUserInput() {
+  renderUserInput = () => {
     return <div className={"gameRoom"}>
       <input className={"personalInfo"} type="text" name="name" value={this.state.name} placeholder={"Name"} onChange={this.updateName} autoComplete={"off"}/>
       <button onClick={()=> {this.setState({profileIsSet: this.state.name !== ''})}}>Start</button>
     </div>
   };
 
-  render() {
+  renderContent = () => {
     const { profileIsSet, gameStart, wordList, currentIndex, completed } = this.state;
 
     if (!profileIsSet) {
@@ -66,24 +66,22 @@ class GameRoom extends Component {
     }
 
     if (profileIsSet && !gameStart) {
-      return <div className={"gameRoom"}>
-        <CountDown startTimer={3} timerEndCallback={this.timerEnd}/>
-      </div>
+      return <CountDown startTimer={3} timerEndCallback={this.timerEnd}/>
     }
 
     if (completed) {
-      return <div  className={"gameRoom"}>
-        <h1>Congratulations {this.state.name}!</h1>
-        <p>You have successfully completed the challenge. Your total time is {this.state.totalTime} milliseconds!</p>
-        <p>You may check the <Link to={'/leader-board'}>Leader Board</Link> to compare with others</p>
-      </div>
+      return <Completion name={this.state.name} totalTime={this.state.totalTime}/>
     }
 
-    return (
-      <div className={"gameRoom"}>
-        <TypeBox currentWord={wordList[currentIndex].word} recordTime={this.recordTime}/>
-      </div>
-    );
+    return <TypeBox currentWord={wordList[currentIndex].word} recordTime={this.recordTime}/>
+  };
+
+  render() {
+    return <div className={"gameRoom"}>
+      {
+        this.renderContent()
+      }
+    </div>
   }
 }
 
