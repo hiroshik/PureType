@@ -11,7 +11,7 @@ const Navigation = (props) => {
         </Link>
       </li>
       <li>
-        <Link to={"/leaderboard"}>
+        <Link to={"/leader-board"}>
           <i className="fas fa-crown" />
           Leaderboard
         </Link>

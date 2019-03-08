@@ -17,6 +17,26 @@
       border-radius: 6px;
       margin-bottom: 40px;
     }
+
+    &.typeBox {
+      border: 2px solid $white;
+      border-radius: 6px;
+      text-align: center;
+      display: block;
+      margin: 0 auto;
+    }
+  }
+
+  .currentWord {
+    display: block;
+    text-align: center;
+    font-size: 80px;
+    margin-bottom: 40px;
+  }
+
+  a {
+    color: $rallyGreen;
+    text-decoration: underline;
   }
 
   button {
