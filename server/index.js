@@ -153,64 +153,86 @@ const wordList = [
     {'word': 'yellowgreen', 'color': '9ACD32'}
 ];
 
-const sendWord = function sendWord(client, userName) {
-    let wordIndex = Math.floor(Math.random() * wordList.length);
-    let colourIndex = Math.floor(Math.random() * wordList.length);
-    client.emit('new-word', {
-        word: wordList[wordIndex].word,
-        color: wordList[colourIndex].color,
-    });
+let lastScores = [];
 
-    userInfo[userName].lastWord = wordList[wordIndex].word;
+const sendWords = function sendWord(client) {
+    const numberOfWords = 15;
+
+    const words = [];
+    for (let x = 0; x < numberOfWords; x++) {
+        let wordIndex = Math.floor(Math.random() * wordList.length);
+        let colourIndex = Math.floor(Math.random() * wordList.length);
+        words.push({
+            word: wordList[wordIndex].word,
+            color: wordList[colourIndex].color,
+        });
+    }
+    console.log('Sending words', words);
+    client.emit('words', words);
 };
 
-const similarity = function similarity(strA,strB){
-    for (var result = 0, i = strA.length; i--;){
-        if (typeof strB[i] === 'undefined' || strA[i] === strB[i]) {}
-        else if (strA[i].toLowerCase() === strB[i].toLowerCase())
-            result++;
-        else
-            result += 4;
-    }
-    return 1 - (result + 4*Math.abs(strA.length - strB.length))/(2*(strA.length+strB.length));
-}
-
 io.on('connection', client => {
-    const userName = client.handshake.query.name;
-
     
     client.join('/game-room', () => {
-        console.info('New user', userName);
-        io.emit('game-room', {
-            newUser: userName
-        });
-
-        userInfo[userName] = { score: 0, lastWord: null };
-
-        sendWord(client, userName);        
+        console.info(`New user joined ${Object.keys(userInfo).length} users in game.`);
+        sendWords(client);        
     });
 
     client.on('disconnect', (reason) => {
-        console.info('User ' +  userName + ' left because of ' + reason);
-        io.emit('game-room', {
-            userLeft: userName
-        });
-
-        delete userInfo[userName];
+        delete userInfo[client.userName];
+        console.info(`User left. ${Object.keys(userInfo).length} users left in game.`);
     });
 
     client.on('score', (data) => {
-        const similarityScore = similarity(data.word, userInfo[userName].lastWord);
-        console.debug(`${userName} sent ${data.word} for ${userInfo[userName].lastWord} with similarity score of ${similarityScore}`);
-        userInfo[userName].score += (data.time / 100) * similarityScore;
-        sendWord(client, userName);
 
+        const { userName } = data;
+    //    console.debug(`${userName} sent ${data.word} in ${data.time}ms`);
+
+
+        if (!userInfo[userName]) {
+            userInfo[userName] = { score: 0, words: 0, totalTime: 0, userName};
+        }
+
+        userInfo[userName].words++;
+        userInfo[userName].totalTime += 1000.0 / data.time;
+        userInfo[userName].score = userInfo[userName].totalTime / userInfo[userName].words;
+        client.userName = userName;
     });
 });
 
 setInterval(() => {
+    const scores = [];
+
+    const userNames = Object.keys(userInfo);
+
+    for (let user of userNames) {
+        scores.push(userInfo[user]);
+    }
+
+    scores.sort((userA, userB) =>  userA.score - userB.score).reverse();
+    
+    let sendScores = false;
+
+    if (lastScores.length != 0)  {
+        console.log('comparing', { scores, lastScores});
+        for (let x = 0; x < Math.min(10, scores.length, lastScores.length); x++) {
+            if (scores[x].userName != lastScores[x].userName) {
+                sendScores = true;
+            }
+        }
+
+        if (!sendScores) {
+            return;
+        }
+    }
+
+    lastScores = scores.slice(0);
+    console.log('Last score', lastScores);
+
     io.emit('leaderboard', userInfo);
-    console.log("Sending leaderboard");
+   // console.log("Sending leaderboard");
 }, 10000);
+
+
 
 server.listen(4000);

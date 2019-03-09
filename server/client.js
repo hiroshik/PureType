@@ -12,14 +12,15 @@ socket.on('game-room', (data) => {
 
 
 socket.on('message', (data) => {
-    console.log(data);
+    console.log('Server message', data);
 });
 
 setInterval(() => {
     console.log('Sending word');
     socket.emit('score', {
         word: 'pumpkin',
-        time: Math.floor(Math.random() * Math.floor(1000))
+        time: Math.floor(Math.random() * Math.floor(10000)),
+        userName: process.argv[2]
     });
 }, 3000);
 
@@ -27,6 +28,6 @@ socket.on('leaderboard', (data) => {
     console.log('Leaderboard', data);
 });
 
-socket.on('new-word', (data) => {
+socket.on('words', (data) => {
     console.log('Retrieved new word', data);
 });
