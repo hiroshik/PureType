@@ -1,5 +1,15 @@
 const server = require('http').createServer();
 const io = require('socket.io')(server);
+const sqlite3 = require('sqlite3').verbose();
+//const { promisify} = require('util')
+
+const db = new sqlite3.Database('leaderboard', (err) => {
+    console.log('Db info', err);
+    db.run('CREATE TABLE IF NOT EXISTS scores (username varchar(10), average real);', (err) => {
+        console.log('Table created', err);
+    });
+    
+});
 
 const userInfo = {};
 
@@ -178,61 +188,32 @@ io.on('connection', client => {
     });
 
     client.on('disconnect', (reason) => {
-        delete userInfo[client.userName];
         console.info(`User left. ${Object.keys(userInfo).length} users left in game.`);
     });
 
     client.on('score', (data) => {
         const { userName, totalTime } = data;
 
-        if (!userInfo[userName]) {
-            userInfo[userName] = { totalTime: 0, sessions: 0 };
-        }
-
-        userInfo[userName].sessions++;
-        userInfo[userName].totalTime += totalTime;
         client.userName = userName;
+
+        const average = totalTime / (numberOfWords * 1.0);
+        db.run(`INSERT INTO scores(username, average) VALUES ('${userName}', ${average})`, (err) => {
+            console.log('Updating scores', err);
+        });
     });
 });
 
 setInterval(() => {
-
     const scores = [];
+    db.all('select username, AVG(average) AS average from scores GROUP BY username ORDER BY AVG(average) DESC LIMIT 10',[], (err, rows) =>
+    {
+        rows.forEach(element => {
+            scores.push({user: element.username, score: element.average});
+        });
 
-    const userNames = Object.keys(userInfo);
-
-    for (let user of userNames) {
-        if (!userInfo[user].sessions) {
-            continue;
-        }
-
-        const sessions = userInfo[user].sessions;
-        const average = userInfo[user].totalTime / (1.0 * userInfo[user].sessions * numberOfWords);
-        scores.push({user, average});
-        console.log(scores);
-    }
-
-    scores.sort((userA, userB) =>  userA.average - userB.average).reverse();
-    
-    // let sendScores = false;
-
-    // if (lastScores.length != 0)  {
-    //     console.log('comparing', { scores, lastScores});
-    //     for (let x = 0; x < Math.min(10, scores.length, lastScores.length); x++) {
-    //         if (scores[x].userName != lastScores[x].userName) {
-    //             sendScores = true;
-    //         }
-    //     }
-
-    //     if (!sendScores) {
-    //         return;
-    //     }
-    // }
-
-    // lastScores = scores.slice(0);
-    // console.log('Last score', lastScores);
-
-    io.emit('leaderboard', scores);
+        console.log('leaderboard', scores);
+        io.emit('leaderboard', scores);
+    });
 }, 5000);
 
 
