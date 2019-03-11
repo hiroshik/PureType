@@ -18,8 +18,7 @@ socket.on('message', (data) => {
 setInterval(() => {
     console.log('Sending word');
     socket.emit('score', {
-        word: 'pumpkin',
-        time: Math.floor(Math.random() * Math.floor(10000)),
+        totalTime: Math.floor(Math.random() * Math.floor(30000)),
         userName: process.argv[2]
     });
 }, 3000);

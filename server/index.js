@@ -154,9 +154,9 @@ const wordList = [
 ];
 
 let lastScores = [];
+const numberOfWords = 15;
 
 const sendWords = function sendWord(client) {
-    const numberOfWords = 15;
 
     const words = [];
     for (let x = 0; x < numberOfWords; x++) {
@@ -172,7 +172,6 @@ const sendWords = function sendWord(client) {
 };
 
 io.on('connection', client => {
-    
     client.join('/game-room', () => {
         console.info(`New user joined ${Object.keys(userInfo).length} users in game.`);
         sendWords(client);        
@@ -184,54 +183,57 @@ io.on('connection', client => {
     });
 
     client.on('score', (data) => {
-
-        const { userName } = data;
-    //    console.debug(`${userName} sent ${data.word} in ${data.time}ms`);
-
+        const { userName, totalTime } = data;
 
         if (!userInfo[userName]) {
-            userInfo[userName] = { score: 0, words: 0, totalTime: 0, userName};
+            userInfo[userName] = { totalTime: 0, sessions: 0 };
         }
 
-        userInfo[userName].words++;
-        userInfo[userName].totalTime += 1000.0 / data.time;
-        userInfo[userName].score = userInfo[userName].totalTime / userInfo[userName].words;
+        userInfo[userName].sessions++;
+        userInfo[userName].totalTime += totalTime;
         client.userName = userName;
     });
 });
 
 setInterval(() => {
+
     const scores = [];
 
     const userNames = Object.keys(userInfo);
 
     for (let user of userNames) {
-        scores.push(userInfo[user]);
+        if (!userInfo[user].sessions) {
+            continue;
+        }
+
+        const sessions = userInfo[user].sessions;
+        const average = userInfo[user].totalTime / (1.0 * userInfo[user].sessions * numberOfWords);
+        scores.push({user, average});
+        console.log(scores);
     }
 
-    scores.sort((userA, userB) =>  userA.score - userB.score).reverse();
+    scores.sort((userA, userB) =>  userA.average - userB.average).reverse();
     
-    let sendScores = false;
+    // let sendScores = false;
 
-    if (lastScores.length != 0)  {
-        console.log('comparing', { scores, lastScores});
-        for (let x = 0; x < Math.min(10, scores.length, lastScores.length); x++) {
-            if (scores[x].userName != lastScores[x].userName) {
-                sendScores = true;
-            }
-        }
+    // if (lastScores.length != 0)  {
+    //     console.log('comparing', { scores, lastScores});
+    //     for (let x = 0; x < Math.min(10, scores.length, lastScores.length); x++) {
+    //         if (scores[x].userName != lastScores[x].userName) {
+    //             sendScores = true;
+    //         }
+    //     }
 
-        if (!sendScores) {
-            return;
-        }
-    }
+    //     if (!sendScores) {
+    //         return;
+    //     }
+    // }
 
-    lastScores = scores.slice(0);
-    console.log('Last score', lastScores);
+    // lastScores = scores.slice(0);
+    // console.log('Last score', lastScores);
 
-    io.emit('leaderboard', userInfo);
-   // console.log("Sending leaderboard");
-}, 10000);
+    io.emit('leaderboard', scores);
+}, 5000);
 
 
 
