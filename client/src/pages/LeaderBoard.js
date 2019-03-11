@@ -12,6 +12,7 @@ class LeaderBoard extends Component {
 
   componentDidMount() {
     this.socket.on('leaderboard', (data) => {
+      console.log(data);
       this.setState({leaderBoard: data})
     });
   }
@@ -43,8 +44,8 @@ class LeaderBoard extends Component {
                     <td className={"order"}>
                       <Trophy position={i+1}/>
                     </td>
-                    <td>{user.userName}</td>
-                    <td>{user.score / 1000} s</td>
+                    <td>{user.user}</td>
+                    <td>{(user.average / 1000).toFixed(5)} s</td>
                   </tr>
                 );
             })
