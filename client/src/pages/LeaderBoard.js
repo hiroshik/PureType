@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import socket from "../socket";
 import Trophy from "../components/Trophy";
+import Loading from "../components/Loading";
 
 
 class LeaderBoard extends Component {
@@ -24,6 +25,9 @@ class LeaderBoard extends Component {
   render() {
     const {leaderBoard} = this.state;
 
+    if (leaderBoard.length === 0) {
+      return <Loading text={"Loading Leader Board..."}/>
+    }
     return (
       <div className={"leaderBoard"}>
         <h1>Leader Board</h1>
@@ -37,7 +41,6 @@ class LeaderBoard extends Component {
           </thead>
           <tbody>
           {
-            leaderBoard.length > 0 &&
             leaderBoard.map((user, i) => {
               return (
                   <tr key={i}>
@@ -45,7 +48,7 @@ class LeaderBoard extends Component {
                       <Trophy position={i+1}/>
                     </td>
                     <td>{user.user}</td>
-                    <td>{(user.average / 1000).toFixed(5)} s</td>
+                    <td>{(user.score / 1000).toFixed(5)} s</td>
                   </tr>
                 );
             })
