@@ -205,7 +205,7 @@ io.on('connection', client => {
 
 setInterval(() => {
     const scores = [];
-    db.all('select username, AVG(average) AS average from scores GROUP BY username ORDER BY AVG(average) DESC LIMIT 10',[], (err, rows) =>
+    db.all('select username, AVG(average) AS average from scores GROUP BY username ORDER BY AVG(average) ASC LIMIT 10',[], (err, rows) =>
     {
         rows.forEach(element => {
             scores.push({user: element.username, score: element.average});
