@@ -167,16 +167,24 @@ let lastScores = [];
 const numberOfWords = 15;
 
 const sendWords = function sendWord(client) {
-
+    const wordDict = {};
     const words = [];
-    for (let x = 0; x < numberOfWords; x++) {
+    do {
         let wordIndex = Math.floor(Math.random() * wordList.length);
         let colourIndex = Math.floor(Math.random() * wordList.length);
+
+        if (wordDict[wordIndex]) {
+            continue;
+        }
+
         words.push({
             word: wordList[wordIndex].word,
             color: wordList[colourIndex].color,
         });
-    }
+
+        wordDict[wordIndex] = {};
+    } while (words.length < numberOfWords);
+    
     console.log('Sending words', words);
     client.emit('words', words);
 };
