@@ -24,7 +24,7 @@ class GameRoom extends Component {
     })
   };
 
-  timerEnd = () => {
+  countdownEnd = () => {
     this.setState({gameStart: true})
   };
 
@@ -56,10 +56,10 @@ class GameRoom extends Component {
   }
 
   renderUserInput = () => {
-    return <div className={"gameRoom"}>
+    return <React.Fragment>
       <input className={"personalInfo"} type="text" name="name" value={this.state.name} placeholder={"Name"} onChange={this.updateName} autoComplete={"off"}/>
       <button onClick={this.setProfile}>Start</button>
-    </div>
+    </React.Fragment>
   };
 
   renderContent = () => {
@@ -70,16 +70,14 @@ class GameRoom extends Component {
     }
 
     if (profileIsSet && !gameStart) {
-      return <CountDown startTimer={3} timerEndCallback={this.timerEnd}/>
+      return <CountDown startTimer={3} timerEndCallback={this.countdownEnd}/>
     }
 
     if (completed) {
       return <Completion name={this.state.name} totalTime={this.state.totalTime}/>
     }
 
-    return <TypeBox currentWord={wordList[currentIndex].word} recordTime={this.recordTime}/>
-
-
+    return <TypeBox currentWord={wordList[currentIndex].word} color={wordList[currentIndex].color} recordTime={this.recordTime}/>
 
   };
 

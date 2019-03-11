@@ -32,8 +32,8 @@ class TypeBox extends Component {
   }
 
   render() {
-
     return <div className={"typeBox"}>
+      <span className={"colorChip"} style={{backgroundColor: this.props.color}}/>
       <span className={"currentWord"}>
         {this.props.currentWord}
       </span>
