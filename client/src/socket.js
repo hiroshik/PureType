@@ -2,10 +2,10 @@ import socketIOClient from "socket.io-client";
 
 const socketBase = "http://127.0.0.1:4000";
 
-export default function socket (userName = 'guest') {
-  const socket = socketIOClient(`${socketBase}?name=${userName}`);
+export default function socket () {
+  const socket = socketIOClient(`${socketBase}`);
   socket.on("connect", () => {
-    console.log("Connect with username " + userName);
+    console.log("Connected ");
   });
   return socket;
 }

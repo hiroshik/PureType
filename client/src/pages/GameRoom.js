@@ -4,28 +4,18 @@ import TypeBox from "../components/TypeBox";
 import socket from "../socket";
 import Completion from "../components/Completion";
 
-const words = [{'word': 'aliceblue', 'color': 'F0F8FF'},
-  {'word': 'antiquewhite', 'color': 'FAEBD7'},
-  {'word': 'aqua', 'color': '00FFFF'},
-  {'word': 'aquamarine', 'color': '7FFFD4'},
-  {'word': 'azure', 'color': 'F0FFFF'},
-  {'word': 'beige', 'color': 'F5F5DC'},
-  {'word': 'bisque', 'color': 'FFE4C4'},
-  {'word': 'black', 'color': '000000'},
-  {'word': 'blanchedalmond', 'color': 'FFEBCD'},
-  {'word': 'blue', 'color': '0000FF'} ];
-
 class GameRoom extends Component {
-  // socket = socket();
+  socket = socket();
+
   state = {
     response: null,
     name: "",
     profileIsSet: false,
     gameStart: false,
-    wordList: words,
+    wordList: [],
     currentIndex: 0,
     completed: false,
-    totalTime: 0,
+    totalTime: 0
   };
 
   updateName = (e) => {
@@ -39,22 +29,36 @@ class GameRoom extends Component {
   };
 
   recordTime = (word, timeSpent) => {
-    console.log({user: this.state.name, word: word, time: timeSpent});
     if (this.state.currentIndex < this.state.wordList.length - 1) {
       this.setState({
         currentIndex: this.state.currentIndex + 1,
         totalTime: this.state.totalTime + timeSpent
       })
     } else {
+      this.socket.emit('score', {userName: this.state.name, totalTime: this.state.totalTime});
       this.setState({completed: true});
       console.log('Complete');
     }
   };
 
+  setProfile = () => {
+    this.setState({profileIsSet: this.state.name !== ''});
+  };
+
+  componentDidMount() {
+    this.socket.on('words', (data) => {
+      this.setState({wordList: data})
+    });
+  }
+
+  componentWillUnmount() {
+    this.socket.close();
+  }
+
   renderUserInput = () => {
     return <div className={"gameRoom"}>
       <input className={"personalInfo"} type="text" name="name" value={this.state.name} placeholder={"Name"} onChange={this.updateName} autoComplete={"off"}/>
-      <button onClick={()=> {this.setState({profileIsSet: this.state.name !== ''})}}>Start</button>
+      <button onClick={this.setProfile}>Start</button>
     </div>
   };
 
@@ -74,6 +78,9 @@ class GameRoom extends Component {
     }
 
     return <TypeBox currentWord={wordList[currentIndex].word} recordTime={this.recordTime}/>
+
+
+
   };
 
   render() {
