@@ -230,6 +230,6 @@ setInterval(() => {
 
         io.emit('leaderboard', scores);
     });
-}, 5000);
+}, 700);
 
 server.listen(4000);
