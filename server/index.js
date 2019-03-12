@@ -1,14 +1,16 @@
 const server = require('http').createServer();
 const io = require('socket.io')(server);
 const sqlite3 = require('sqlite3').verbose();
-//const { promisify} = require('util')
 
 const db = new sqlite3.Database('leaderboard', (err) => {
-    console.log('Db info', err);
+    if (err) {
+        console.error('Error creating db', err);
+    }
     db.run('CREATE TABLE IF NOT EXISTS scores (username varchar(10), average real);', (err) => {
-        console.log('Table created', err);
+        if (err) {
+            console.error('Error creating table', err);
+        }
     });
-    
 });
 
 const userInfo = {};
@@ -163,8 +165,8 @@ const wordList = [
     {'word': 'yellowgreen', 'color': '#9ACD32'}
 ];
 
-let lastScores = [];
 const numberOfWords = 15;
+let numberOfUsers = 0;
 
 const sendWords = function sendWord(client) {
     const wordDict = {};
@@ -185,18 +187,19 @@ const sendWords = function sendWord(client) {
         wordDict[wordIndex] = {};
     } while (words.length < numberOfWords);
     
-    console.log('Sending words', words);
     client.emit('words', words);
 };
 
 io.on('connection', client => {
     client.join('/game-room', () => {
-        console.info(`New user joined ${Object.keys(userInfo).length} users in game.`);
+        numberOfUsers++;
+        console.info(`New user joined. ${numberOfUsers} users in game.`);
         sendWords(client);        
     });
 
     client.on('disconnect', (reason) => {
-        console.info(`User left. ${Object.keys(userInfo).length} users left in game.`);
+        numberOfUsers--;
+        console.info(`User ${client.userName} left. ${numberOfUsers} users left in game.`);
     });
 
     client.on('score', (data) => {
@@ -206,7 +209,9 @@ io.on('connection', client => {
 
         const average = totalTime / (numberOfWords * 1.0);
         db.run(`INSERT INTO scores(username, average) VALUES ('${userName}', ${average})`, (err) => {
-            console.log('Updating scores', err);
+            if (err) {
+                console.error('Error updating scores', err);
+            }
         });
     });
 });
@@ -215,15 +220,16 @@ setInterval(() => {
     const scores = [];
     db.all('select username, AVG(average) AS average from scores GROUP BY username ORDER BY AVG(average) ASC LIMIT 10',[], (err, rows) =>
     {
+        if (err) {
+            console.error('Error querying leaderboard', err);
+        }
+
         rows.forEach(element => {
             scores.push({user: element.username, score: element.average});
         });
 
-        console.log('leaderboard', scores);
         io.emit('leaderboard', scores);
     });
 }, 5000);
-
-
 
 server.listen(4000);
