@@ -208,7 +208,11 @@ io.on('connection', client => {
         client.userName = userName;
 
         const average = totalTime / (numberOfWords * 1.0);
-        db.run(`INSERT INTO scores(username, average) VALUES ('${userName}', ${average})`, (err) => {
+
+        if (average <= 0) {
+            return;
+        }
+        db.run(`INSERT INTO scores(username, average) VALUES (?, ?)`,[userName, average], (err) => {
             if (err) {
                 console.error('Error updating scores', err);
             }
