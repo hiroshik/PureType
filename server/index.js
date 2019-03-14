@@ -222,14 +222,14 @@ io.on('connection', client => {
 
 setInterval(() => {
     const scores = [];
-    db.all('select username, min(average) AS average from scores GROUP BY username ORDER BY average ASC LIMIT 10',[], (err, rows) =>
+    db.all('select username, min(average) AS average, COUNT(1) as attempts from scores GROUP BY username ORDER BY average ASC LIMIT 10',[], (err, rows) =>
     {
         if (err) {
             console.error('Error querying leaderboard', err);
         }
 
         rows.forEach(element => {
-            scores.push({user: element.username, score: element.average});
+            scores.push({user: element.username, score: element.average, attempts: element.attempts});
         });
 
         io.emit('leaderboard', scores);
