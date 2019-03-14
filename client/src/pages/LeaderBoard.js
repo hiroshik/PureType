@@ -37,6 +37,7 @@ class LeaderBoard extends Component {
               <th/>
               <th>Name</th>
               <th>TPW</th>
+              <th>Attempts</th>
             </tr>
           </thead>
           <tbody>
@@ -49,6 +50,7 @@ class LeaderBoard extends Component {
                     </td>
                     <td>{user.user}</td>
                     <td>{(user.score / 1000).toFixed(5)} s</td>
+                    <td>{user.attempts}</td>
                   </tr>
                 );
             })
